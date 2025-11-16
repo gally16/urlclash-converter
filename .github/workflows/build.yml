@@ -20,21 +20,15 @@ jobs:
           npm init -y
           npm install typescript --save-dev
 
-      - name: Compile TypeScript
+      - name: Compile with tsconfig
         run: |
-          npx tsc src/converter.ts \
-            --outDir dist \
-            --target ES2020 \
-            --module none \
-            --lib ES2020,DOM \
-            --skipLibCheck
+          npx tsc
 
       - name: Inject CORE_URL
         run: |
           REPO="${{ github.repository }}"
           CORE_URL="https://raw.githubusercontent.com/\$REPO/main/dist/converter.js"
           sed -i "s|const CORE_URL =.*|const CORE_URL = '$CORE_URL';|" api/snippet.js
-          # 为网页注入 CORE_URL
           echo "const CORE_URL = '$CORE_URL';" > dist/core-url.js
           cat dist/core-url.js dist/converter.js > dist/combined.js
           mv dist/combined.js dist/converter.js

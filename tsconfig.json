@@ -9,9 +9,11 @@
         ],
         "strict": true,
         "skipLibCheck": true,
-        "forceConsistentCasingInFileNames": true
+        "forceConsistentCasingInFileNames": true,
+        "types": []
     },
     "include": [
-        "src"
+        "src",
+        "src/types"
     ]
 }
