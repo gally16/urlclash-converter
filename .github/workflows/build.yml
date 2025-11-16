@@ -1,0 +1,41 @@
+name: Build & Release
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install & Build
+        run: |
+          npm init -y
+          npm install typescript --save-dev
+          npx tsc --init --target ES2020 --module none --outDir dist
+          npx tsc src/converter.ts
+
+      - name: Inject CORE_URL
+        run: |
+          REPO="${{ github.repository }}"
+          CORE_URL="https://raw.githubusercontent.com/\$REPO/main/dist/converter.js"
+          sed -i "s|const CORE_URL =.*|const CORE_URL = '\$CORE_URL';|" api/snippet.js || true
+          echo "window.CORE_URL = '\$CORE_URL';" > dist/core-url.js
+          cat dist/core-url.js dist/converter.js > dist/combined.js
+          mv dist/combined.js dist/converter.js
+
+      - name: Create Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Build
+          files: dist/converter.js
+          draft: false
+          prerelease: false

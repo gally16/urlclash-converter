@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>订阅转换器（纯前端）</title>
+    <script>
+        const script = document.createElement('script');
+        script.src = 'https://raw.githubusercontent.com/wyf9/sub-converter-snippet/main/dist/converter.js';
+        document.head.appendChild(script);
+    </script>
+    <style>
+        body {
+            font-family: monospace;
+            padding: 20px;
+        }
+
+        textarea,
+        pre {
+            width: 100%;
+            font-family: monospace;
+        }
+
+        button {
+            margin: 5px;
+            padding: 10px;
+        }
+    </style>
+</head>
+
+<body>
+    <h1>订阅转换器（本地执行）</h1>
+    <textarea id="input" placeholder="粘贴订阅链接或 Clash YAML" style="height:300px"></textarea>
+    <br>
+    <button onclick="convert()">链接 → Clash</button>
+    <button onclick="reverse()">Clash → 链接</button>
+    <pre id="output">加载中...</pre>
+    <script>
+        script.onload = () => {
+            document.getElementById('output').textContent = '就绪！';
+        };
+        function convert() {
+            const links = document.getElementById('input').value.trim().split('\n').filter(Boolean);
+            document.getElementById('output').textContent = linkToClash(links);
+        }
+        function reverse() {
+            const yaml = document.getElementById('input').value;
+            document.getElementById('output').textContent = clashToLink(yaml);
+        }
+    </script>
+</body>
+
+</html>
