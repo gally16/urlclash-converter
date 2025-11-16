@@ -2,7 +2,8 @@ name: Build & Release
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  workflow_dispatch:
 
 jobs:
   build:
@@ -24,20 +25,35 @@ jobs:
         run: |
           npx tsc
 
-      - name: Inject CORE_URL
+      - id: inject_core
+        name: Inject CORE_URL & Get Time
         run: |
+          # 获取日期时间 (UTC)
+          UTC_TIME=$(TZ=UTC date '+%Y-%m-%d %H:%M:%S')
+          UTC_DATE=$(TZ=UTC date '+%Y-%m-%d')
+          echo "UTC_TIME=$UTC_TIME" >> $GITHUB_OUTPUT
+          echo "UTC_DATE=$UTC_DATE" >> $GITHUB_OUTPUT
+          # 进行替换 Repo
           REPO="${{ github.repository }}"
-          CORE_URL="https://raw.githubusercontent.com/\$REPO/main/dist/converter.js"
-          sed -i "s|const CORE_URL =.*|const CORE_URL = '$CORE_URL';|" api/snippet.js
-          echo "const CORE_URL = '$CORE_URL';" > dist/core-url.js
-          cat dist/core-url.js dist/converter.js > dist/combined.js
-          mv dist/combined.js dist/converter.js
+
+          mv src/snippet.js dist/snippet.js
+          mv src/frontend.html dist/frontend.html
+
+          sed -i "s|REPOPLACEHOLDER|\$REPO|g" src/snippet.js
+          sed -i "s|REPOPLACEHOLDER|\$REPO|g" src/frontend.html
+          sed -i "s|not-yet-generated|\$UTC_TIME|g" src/snippet.js
+          sed -i "s|not-yet-generated|\$UTC_TIME|g" src/frontend.html
 
       - name: Create Release
         uses: softprops/action-gh-release@v2
         with:
           tag_name: latest
-          name: Latest Build
-          files: dist/converter.js
+          name: "Build ${{ steps.inject_core.outputs.UTC_DATE }}"
+          files: dist/*
           draft: false
           prerelease: false
+          body: |
+            在 **${{ steps.inject_core.outputs.UTC_TIME }}** (UTC 时间) 的自动构建
+            配置 Repo: **${{ github.repository }}**
+            Testing.
+            TODO: 文件说明

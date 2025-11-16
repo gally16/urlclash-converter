@@ -1,12 +1,20 @@
+<!--
+SPDX-License-Identifier: GPL-3.0-or-later
+GitHub: https://github.com/siiway/subconverter-snippet
+Only for education and study use.
+本工具仅提供 URL 和 Clash Config 的配置文件格式转换，不存储任何信息，不提供任何代理服务，一切使用产生后果由使用者自行承担，SiiWay Team 及开发本工具的成员不负任何责任.
+Generated at: not-yet-generated (UTC)
+-->
+
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8">
-    <title>订阅转换器（纯前端）</title>
+    <title>订阅转换器</title>
     <script>
         const script = document.createElement('script');
-        script.src = 'https://raw.githubusercontent.com/wyf9/sub-converter-snippet/main/dist/converter.js';
+        script.src = 'https://github.com/REPOPLACEHOLDER/releases/download/latest/converter.js';
         document.head.appendChild(script);
     </script>
     <style>
@@ -29,7 +37,7 @@
 </head>
 
 <body>
-    <h1>订阅转换器（本地执行）</h1>
+    <h1>链接 &lt;-&gt; Clash 订阅转换器（本地执行）</h1>
     <textarea id="input" placeholder="粘贴订阅链接或 Clash YAML" style="height:300px"></textarea>
     <br>
     <button onclick="convert()">链接 → Clash</button>
@@ -39,6 +47,9 @@
         script.onload = () => {
             document.getElementById('output').textContent = '就绪！';
         };
+        script.onerror = (e) => {
+            document.getElementById('output').textContent = `错误: ${e}`;
+        }
         function convert() {
             const links = document.getElementById('input').value.trim().split('\n').filter(Boolean);
             document.getElementById('output').textContent = linkToClash(links);
