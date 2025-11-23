@@ -12,9 +12,11 @@ import { encode as encodePunycode } from "ts-punycode";
 export function punycodeDomain(domain: string): string {
   return domain
     .split(".")
-    .map(label => {
+    .map((label) => {
       // 只对包含非 ASCII 字符的标签进行 Punycode 编码
-      return /[^\x00-\x7F]/.test(label) ? "xn--" + encodePunycode(label) : label;
+      return /[^\x00-\x7F]/.test(label)
+        ? "xn--" + encodePunycode(label)
+        : label;
     })
     .join(".");
 }

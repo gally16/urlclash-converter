@@ -12,3 +12,8 @@ body,
 *::after {
   box-sizing: inherit;
 }
+
+.fui-Textarea textarea {
+  height: 100% !important;
+  max-height: 100% !important;
+}

@@ -213,6 +213,8 @@ function AppContent({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () 
             className={styles.actionButton}
             appearance="primary"
             size="large"
+            icon={<ArrowRightRegular />}
+            iconPosition='after'
             onClick={convertToLinks}
           >
             {t('clashToLink')}
@@ -223,7 +225,7 @@ function AppContent({ isDark, toggleTheme }: { isDark: boolean; toggleTheme: () 
         <div className={styles.column}>
           <div className={styles.columnHeader}>
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px' }}>
-              <Title3>{t('subscriptionLinks')}</Title3>
+              <Title3>{t('nodeLinks')}</Title3>
               <Text size={200} style={{ opacity: 0.7 }}>{t('onePerLine')}</Text>
             </div>
             <div className={styles.controls}>
